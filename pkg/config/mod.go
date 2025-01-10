@@ -3,7 +3,6 @@ package config
 const (
 	PRODUCTION = "production"
 	DEV        = "dev"
-	STAGING    = "staging"
 )
 
 var (
