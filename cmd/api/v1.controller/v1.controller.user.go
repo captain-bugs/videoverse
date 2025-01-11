@@ -15,7 +15,9 @@ func (c *ControllerV1) GetUser(ctx *gin.Context, fn GetUser) error {
 	if !exist {
 		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
 	}
-	_, err := fn(id.(string))
+
+	rc := ctx.Request.Context()
+	_, err := fn(rc, id.(string))
 	if err != nil {
 		return ctx.AbortWithError(400, response.NewAPIError(500, err))
 	}
