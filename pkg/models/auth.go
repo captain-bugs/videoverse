@@ -1,5 +1,5 @@
 package models
 
 type JwtContextData struct {
-	UserID string `json:"user_id"`
+	UserID int64 `json:"user_id"`
 }

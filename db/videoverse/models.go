@@ -5,37 +5,38 @@
 package videoversedb
 
 import (
+	"database/sql"
 	"time"
 )
 
 type SharedLink struct {
-	ID        int64      `db:"id" json:"id"`
-	VideoID   int64      `db:"video_id" json:"video_id"`
-	UserID    int64      `db:"user_id" json:"user_id"`
-	Link      string     `db:"link" json:"link"`
-	ExpiresAt time.Time  `db:"expires_at" json:"expires_at"`
-	CreatedAt *time.Time `db:"created_at" json:"created_at"`
+	ID        int64
+	VideoID   int64
+	UserID    int64
+	Link      string
+	ExpiresAt time.Time
+	CreatedAt sql.NullTime
 }
 
 type User struct {
-	ID           int64      `db:"id" json:"id"`
-	Username     string     `db:"username" json:"username"`
-	Email        string     `db:"email" json:"email"`
-	PasswordHash string     `db:"password_hash" json:"password_hash"`
-	CreatedAt    *time.Time `db:"created_at" json:"created_at"`
+	ID           int64
+	Username     string
+	Email        string
+	PasswordHash string
+	CreatedAt    sql.NullTime
 }
 
 type Video struct {
-	ID            int64      `db:"id" json:"id"`
-	UserID        int64      `db:"user_id" json:"user_id"`
-	SourceVideoID *int64     `db:"source_video_id" json:"source_video_id"`
-	Type          string     `db:"type" json:"type"`
-	FilePath      string     `db:"file_path" json:"file_path"`
-	FileName      *string    `db:"file_name" json:"file_name"`
-	SizeInBytes   int64      `db:"size_in_bytes" json:"size_in_bytes"`
-	Duration      int64      `db:"duration" json:"duration"`
-	StartTime     *int64     `db:"start_time" json:"start_time"`
-	EndTime       *int64     `db:"end_time" json:"end_time"`
-	CreatedAt     *time.Time `db:"created_at" json:"created_at"`
-	UpdatedAt     *time.Time `db:"updated_at" json:"updated_at"`
+	ID            int64
+	UserID        int64
+	SourceVideoID sql.NullInt64
+	Type          string
+	FilePath      string
+	FileName      sql.NullString
+	SizeInBytes   int64
+	Duration      int64
+	StartTime     sql.NullInt64
+	EndTime       sql.NullInt64
+	CreatedAt     sql.NullTime
+	UpdatedAt     sql.NullTime
 }

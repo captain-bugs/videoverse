@@ -2,6 +2,7 @@ package response
 
 import (
 	"fmt"
+	"net/http"
 )
 
 type APIError struct {
@@ -25,5 +26,19 @@ func UnAuthorized(msg string) APIError {
 	return APIError{
 		StatusCode: 401,
 		Message:    msg,
+	}
+}
+
+func InvalidRequestBody() APIError {
+	return APIError{
+		StatusCode: http.StatusBadRequest,
+		Message:    "invalid request data",
+	}
+}
+
+func ErrorsInRequestBody(errors map[string]any) APIError {
+	return APIError{
+		StatusCode: http.StatusUnprocessableEntity,
+		Message:    errors,
 	}
 }

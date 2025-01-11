@@ -18,13 +18,20 @@ SELECT *
 FROM shared_links
 WHERE user_id = ?;
 
+-- name: SaveUser :one
+INSERT INTO users (email, username, password_hash, created_at)
+VALUES (?, ?, ?, ?)
+RETURNING *;
+
 -- name: SaveVideo :one
 INSERT INTO videos (user_id, type, file_path, file_name, size_in_bytes, duration, created_at)
-VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;
+VALUES (?, ?, ?, ?, ?, ?, ?)
+RETURNING *;
 
 -- name: SaveSharedLink :one
 INSERT INTO shared_links (user_id, video_id, link, expires_at, created_at)
-VALUES (?, ?, ?, ?, ?) RETURNING *;
+VALUES (?, ?, ?, ?, ?)
+RETURNING *;
 
 -- name: DeleteVideoByID :exec
 DELETE

@@ -19,12 +19,12 @@ type Repository struct {
 }
 
 func NewRepository() IRepo {
-	dbConnection := internal.MakeSQLiteConnection()
+	conn := internal.MakeSQLiteConnection()
 	logbox.NewLogBox().Debug().Msg("setting up repository")
 	return &Repository{
-		video: NewVideoRepository(dbConnection),
-		user:  NewUserRepository(dbConnection),
-		share: NewShareRepository(dbConnection),
+		video: NewVideoRepository(conn),
+		user:  NewUserRepository(conn),
+		share: NewShareRepository(conn),
 	}
 }
 

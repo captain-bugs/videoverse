@@ -16,9 +16,11 @@ func Register(group *gin.RouterGroup, repo repository.IRepo) {
 	pc := v1c.NewControllerV1()
 	ph := v1h.NewHandlerV1(repo)
 
+	group.POST("/user/", response.GinWrapper(pc.PostUser, ph.PostUser))
+
 	user := group.Group("/user/").Use(middleware.Auth())
 	{
-		user.GET("/:id/", response.GinWrapper(pc.GetUser, ph.GetUser))
+		user.GET("/", response.GinWrapper(pc.GetUser, ph.GetUser))
 	}
 
 	video := group.Group("/video/").Use(middleware.Auth())

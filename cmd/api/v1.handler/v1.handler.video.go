@@ -6,11 +6,11 @@ import (
 )
 
 type IVideoHandlerV1 interface {
-	GetVideo(ctx context.Context, videoID string) (any, error)
+	GetVideo(ctx context.Context, videoID int64) (any, error)
 	PostVideo(ctx context.Context, payload models.ReqSaveVideo) (any, error)
 }
 
-func (h *HandlerV1) GetVideo(ctx context.Context, videoID string) (any, error) {
+func (h *HandlerV1) GetVideo(ctx context.Context, videoID int64) (any, error) {
 	return nil, nil
 }
 

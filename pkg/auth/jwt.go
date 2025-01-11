@@ -52,12 +52,12 @@ func (tkn *tokenManager) parse(accessToken string, signingKey string) (*tokenDet
 	}
 
 	// Check if time is 0
-	if claims.ExpiresAt.IsZero() {
+	if claims.ExpiresAt != nil && claims.ExpiresAt.IsZero() {
 		return claims, nil
 	}
 
 	// Check if expired
-	if claims.ExpiresAt.Before(time.Now().UTC()) {
+	if claims.ExpiresAt != nil && claims.ExpiresAt.Before(time.Now().UTC()) {
 		return nil, errors.New("token expired")
 
 	}
