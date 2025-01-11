@@ -12,4 +12,5 @@ var (
 	LOGGING_FILE    = getEnvString("LOGGING_FILE", "logs/api.log")
 	APP_PORT        = getEnvInt("APP_PORT", 9091)
 	JWT_SECRET      = getEnvString("JWT_SECRET", "secret")
+	DATABASE_PATH   = getEnvString("DATABASE_PATH", "db/videoverse.db")
 )

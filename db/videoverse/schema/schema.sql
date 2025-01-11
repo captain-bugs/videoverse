@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS videos
     updated_at      DATETIME,
     FOREIGN KEY (source_video_id) REFERENCES videos (id) ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS shared_links
 (
@@ -35,4 +35,4 @@ CREATE TABLE IF NOT EXISTS shared_links
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (video_id) REFERENCES videos (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id)
-    );
+);

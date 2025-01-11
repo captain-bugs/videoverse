@@ -11,6 +11,9 @@ migrate-up:
 migrate-down:
 	migrate -path $(MIGRATION_DIR) -database $(SQLITE_DB) -verbose down
 
+migrate-create:
+	migrate create -ext sql -dir $(MIGRATION_DIR) -seq $(name)
+
 sqlc:
 	rm -rf db/videoverse/*.go; sqlc generate
 
