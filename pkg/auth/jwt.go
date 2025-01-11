@@ -51,6 +51,7 @@ func (tkn *tokenManager) parse(accessToken string, signingKey string) (*tokenDet
 		return nil, errors.New("invalid token")
 	}
 
+	// Check if time is 0
 	if claims.ExpiresAt.IsZero() {
 		return claims, nil
 	}

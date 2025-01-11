@@ -5,10 +5,9 @@ import (
 )
 
 type APIError struct {
-	ErrorCode       string `json:"error_code,omitempty"`
-	StatusCode      int    `json:"status_code"`
-	Message         any    `json:"message"`
-	InternalMessage error  `json:"internal_message,omitempty"`
+	ErrorCode  string `json:"error_code,omitempty"`
+	StatusCode int    `json:"status_code"`
+	Message    any    `json:"message"`
 }
 
 func (a APIError) Error() string {
@@ -19,5 +18,12 @@ func NewAPIError(status int, err error) APIError {
 	return APIError{
 		StatusCode: status,
 		Message:    err.Error(),
+	}
+}
+
+func UnAuthorized(msg string) APIError {
+	return APIError{
+		StatusCode: 401,
+		Message:    msg,
 	}
 }
