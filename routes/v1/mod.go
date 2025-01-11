@@ -3,9 +3,10 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"videoverse/pkg/logbox"
+	"videoverse/repository"
 )
 
-func Register(group *gin.RouterGroup) {
+func Register(group *gin.RouterGroup, repo repository.IRepo) {
 	logbox.NewLogBox().Info().Str("group", "v1").Str("event", "INITIALIZING_ROUTES").Msgf("")
 
 	grp := group.Group("/").Use()

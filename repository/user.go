@@ -1,7 +1,14 @@
 package repository
 
-import "videoverse/pkg/models"
+import (
+	"database/sql"
+	"videoverse/pkg/models"
+)
 
-func NewUserRepository() models.IUserRepo {
-	return nil
+type UserRepository struct {
+	connection *sql.DB
+}
+
+func NewUserRepository(connection *sql.DB) models.IUserRepo {
+	return &UserRepository{connection: connection}
 }

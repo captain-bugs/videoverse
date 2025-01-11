@@ -1,6 +1,10 @@
 package repository
 
-import "videoverse/pkg/models"
+import (
+	"videoverse/internal"
+	"videoverse/pkg/logbox"
+	"videoverse/pkg/models"
+)
 
 type IRepo interface {
 	Video() models.IVideoRepo
@@ -15,10 +19,12 @@ type Repository struct {
 }
 
 func NewRepository() IRepo {
+	dbConnection := internal.MakeSQLiteConnection()
+	logbox.NewLogBox().Debug().Msg("setting up repository")
 	return &Repository{
-		video: NewVideoRepository(),
-		user:  NewUserRepository(),
-		share: NewShareRepository(),
+		video: NewVideoRepository(dbConnection),
+		user:  NewUserRepository(dbConnection),
+		share: NewShareRepository(dbConnection),
 	}
 }
 

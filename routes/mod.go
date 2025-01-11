@@ -5,6 +5,7 @@ import (
 	"time"
 	"videoverse/pkg/config"
 	"videoverse/pkg/logbox"
+	"videoverse/repository"
 	"videoverse/routes/v1"
 
 	"github.com/gin-gonic/gin"
@@ -77,12 +78,12 @@ func (r *Router) enableRecover() {
 	r.router.Use(gin.Recovery())
 }
 
-func (r *Router) setV1Routes() {
-	v1.Register(r.router.Group("api/v1/"))
+func (r *Router) setV1Routes(repo repository.IRepo) {
+	v1.Register(r.router.Group("api/v1/"), repo)
 }
 
-func (r *Router) SetRoutes() http.Handler {
+func (r *Router) SetRoutes(repo repository.IRepo) http.Handler {
 	r.configure()
-	r.setV1Routes()
+	r.setV1Routes(repo)
 	return r.router
 }

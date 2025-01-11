@@ -1,7 +1,12 @@
 package repository
 
-import "videoverse/pkg/models"
+import (
+	"database/sql"
+	"videoverse/pkg/models"
+)
 
-func NewShareRepository() models.IShareRepo {
-	return nil
+type ShareRepository struct{ connection *sql.DB }
+
+func NewShareRepository(connection *sql.DB) models.IShareRepo {
+	return &ShareRepository{connection: connection}
 }

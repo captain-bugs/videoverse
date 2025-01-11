@@ -11,6 +11,7 @@ import (
 	"time"
 	"videoverse/pkg/config"
 	"videoverse/pkg/logbox"
+	"videoverse/repository"
 	"videoverse/routes"
 
 	"github.com/gin-gonic/gin"
@@ -24,10 +25,10 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	logger.Debug().Str("LOG_LEVEL", gin.Mode()).Msg("log level set to DEBUG")
-
+	
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", config.APP_PORT),
-		Handler: routes.NewRouter().SetRoutes(),
+		Handler: routes.NewRouter().SetRoutes(repository.NewRepository()),
 	}
 
 	logger.Info().Str("address", server.Addr).Str("event", "STARING_SERVER").Msg("")
