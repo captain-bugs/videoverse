@@ -78,7 +78,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id int64) (User, error) {
 }
 
 const getVideoByID = `-- name: GetVideoByID :one
-SELECT id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+SELECT id, title, description, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, metadata, created_at, updated_at
 FROM videos
 WHERE id = ?
 `
@@ -88,6 +88,8 @@ func (q *Queries) GetVideoByID(ctx context.Context, id int64) (Video, error) {
 	var i Video
 	err := row.Scan(
 		&i.ID,
+		&i.Title,
+		&i.Description,
 		&i.UserID,
 		&i.SourceVideoID,
 		&i.Type,
@@ -97,6 +99,7 @@ func (q *Queries) GetVideoByID(ctx context.Context, id int64) (Video, error) {
 		&i.Duration,
 		&i.StartTime,
 		&i.EndTime,
+		&i.Metadata,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -104,7 +107,7 @@ func (q *Queries) GetVideoByID(ctx context.Context, id int64) (Video, error) {
 }
 
 const getVideosByUserID = `-- name: GetVideosByUserID :many
-SELECT id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+SELECT id, title, description, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, metadata, created_at, updated_at
 FROM videos
 WHERE user_id = ?
 `
@@ -120,6 +123,8 @@ func (q *Queries) GetVideosByUserID(ctx context.Context, userID int64) ([]Video,
 		var i Video
 		if err := rows.Scan(
 			&i.ID,
+			&i.Title,
+			&i.Description,
 			&i.UserID,
 			&i.SourceVideoID,
 			&i.Type,
@@ -129,6 +134,7 @@ func (q *Queries) GetVideosByUserID(ctx context.Context, userID int64) ([]Video,
 			&i.Duration,
 			&i.StartTime,
 			&i.EndTime,
+			&i.Metadata,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -211,34 +217,43 @@ func (q *Queries) SaveUser(ctx context.Context, arg SaveUserParams) (User, error
 }
 
 const saveVideo = `-- name: SaveVideo :one
-INSERT INTO videos (user_id, type, file_path, file_name, size_in_bytes, duration, created_at)
-VALUES (?, ?, ?, ?, ?, ?, ?)
-RETURNING id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+INSERT INTO videos (user_id, title, description, type, file_path, file_name, size_in_bytes, duration, metadata,
+                    created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING id, title, description, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, metadata, created_at, updated_at
 `
 
 type SaveVideoParams struct {
 	UserID      int64
+	Title       string
+	Description string
 	Type        string
 	FilePath    string
 	FileName    sql.NullString
 	SizeInBytes int64
 	Duration    int64
+	Metadata    sql.NullString
 	CreatedAt   sql.NullTime
 }
 
 func (q *Queries) SaveVideo(ctx context.Context, arg SaveVideoParams) (Video, error) {
 	row := q.db.QueryRowContext(ctx, saveVideo,
 		arg.UserID,
+		arg.Title,
+		arg.Description,
 		arg.Type,
 		arg.FilePath,
 		arg.FileName,
 		arg.SizeInBytes,
 		arg.Duration,
+		arg.Metadata,
 		arg.CreatedAt,
 	)
 	var i Video
 	err := row.Scan(
 		&i.ID,
+		&i.Title,
+		&i.Description,
 		&i.UserID,
 		&i.SourceVideoID,
 		&i.Type,
@@ -248,6 +263,7 @@ func (q *Queries) SaveVideo(ctx context.Context, arg SaveVideoParams) (Video, er
 		&i.Duration,
 		&i.StartTime,
 		&i.EndTime,
+		&i.Metadata,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

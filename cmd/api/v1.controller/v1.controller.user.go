@@ -29,9 +29,9 @@ func (c *ControllerV1) GetUser(ctx *gin.Context, fn GetUser) error {
 }
 
 func (c *ControllerV1) PostUser(ctx *gin.Context, fn PostUser) error {
-	var request models.ReqSaveUser
+	var request *models.ReqSaveUser
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
-		return response.InvalidRequestBody()
+		return response.BadRequest(err)
 	}
 	if problems := models.Validate(request, make(map[string]any)); len(problems) > 0 {
 		return response.ErrorsInRequestBody(problems)

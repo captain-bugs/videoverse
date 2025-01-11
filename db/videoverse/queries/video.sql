@@ -24,8 +24,9 @@ VALUES (?, ?, ?, ?)
 RETURNING *;
 
 -- name: SaveVideo :one
-INSERT INTO videos (user_id, type, file_path, file_name, size_in_bytes, duration, created_at)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+INSERT INTO videos (user_id, title, description, type, file_path, file_name, size_in_bytes, duration, metadata,
+                    created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 RETURNING *;
 
 -- name: SaveSharedLink :one

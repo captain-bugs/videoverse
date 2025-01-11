@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS videos
 (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    title           TEXT    NOT NULL,                                                   -- Title of the video
+    description     TEXT    NOT NULL,                                                   -- Description of the video
     user_id         INTEGER NOT NULL,                                                   -- References the user who owns this video
     source_video_id INTEGER,                                                            -- References the original video if this is a trimmed or merged video
     type            TEXT    NOT NULL CHECK (type IN ('ORIGINAL', 'TRIMMED', 'MERGED')), -- Type of video
@@ -19,6 +21,7 @@ CREATE TABLE IF NOT EXISTS videos
     duration        INTEGER NOT NULL,                                                   -- Duration of the video in seconds
     start_time      INTEGER,                                                            -- Start time for trimmed videos
     end_time        INTEGER,                                                            -- End time for trimmed videos
+    metadata        TEXT,                                                               -- Metadata for the video
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME,
     FOREIGN KEY (source_video_id) REFERENCES videos (id) ON DELETE SET NULL,

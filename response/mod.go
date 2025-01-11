@@ -29,16 +29,16 @@ func UnAuthorized(msg string) APIError {
 	}
 }
 
-func InvalidRequestBody() APIError {
-	return APIError{
-		StatusCode: http.StatusBadRequest,
-		Message:    "invalid request data",
-	}
-}
-
 func ErrorsInRequestBody(errors map[string]any) APIError {
 	return APIError{
 		StatusCode: http.StatusUnprocessableEntity,
 		Message:    errors,
+	}
+}
+
+func BadRequest(err error) APIError {
+	return APIError{
+		StatusCode: http.StatusBadRequest,
+		Message:    err.Error(),
 	}
 }

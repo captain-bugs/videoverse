@@ -28,6 +28,8 @@ type User struct {
 
 type Video struct {
 	ID            int64
+	Title         string
+	Description   string
 	UserID        int64
 	SourceVideoID sql.NullInt64
 	Type          string
@@ -37,6 +39,7 @@ type Video struct {
 	Duration      int64
 	StartTime     sql.NullInt64
 	EndTime       sql.NullInt64
+	Metadata      sql.NullString
 	CreatedAt     sql.NullTime
 	UpdatedAt     sql.NullTime
 }
