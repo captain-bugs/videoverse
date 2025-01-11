@@ -7,10 +7,60 @@ package videoversedb
 
 import (
 	"context"
+	"time"
 )
 
+const DeleteVideoByID = `-- name: DeleteVideoByID :exec
+DELETE
+FROM videos
+WHERE id = ?
+`
+
+func (q *Queries) DeleteVideoByID(ctx context.Context, db DBTX, id int64) error {
+	_, err := db.ExecContext(ctx, DeleteVideoByID, id)
+	return err
+}
+
+const GetLinksSharedByUserID = `-- name: GetLinksSharedByUserID :many
+SELECT id, video_id, user_id, link, expires_at, created_at
+FROM shared_links
+WHERE user_id = ?
+`
+
+func (q *Queries) GetLinksSharedByUserID(ctx context.Context, db DBTX, userID int64) ([]SharedLink, error) {
+	rows, err := db.QueryContext(ctx, GetLinksSharedByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SharedLink
+	for rows.Next() {
+		var i SharedLink
+		if err := rows.Scan(
+			&i.ID,
+			&i.VideoID,
+			&i.UserID,
+			&i.Link,
+			&i.ExpiresAt,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const GetUserByID = `-- name: GetUserByID :one
-SELECT id, username, email, password_hash, created_at FROM users WHERE id = ?
+SELECT id, username, email, password_hash, created_at
+FROM users
+WHERE id = ?
 `
 
 func (q *Queries) GetUserByID(ctx context.Context, db DBTX, id int64) (User, error) {
@@ -22,6 +72,150 @@ func (q *Queries) GetUserByID(ctx context.Context, db DBTX, id int64) (User, err
 		&i.Email,
 		&i.PasswordHash,
 		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const GetVideoByID = `-- name: GetVideoByID :one
+SELECT id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+FROM videos
+WHERE id = ?
+`
+
+func (q *Queries) GetVideoByID(ctx context.Context, db DBTX, id int64) (Video, error) {
+	row := db.QueryRowContext(ctx, GetVideoByID, id)
+	var i Video
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.SourceVideoID,
+		&i.Type,
+		&i.FilePath,
+		&i.FileName,
+		&i.SizeInBytes,
+		&i.Duration,
+		&i.StartTime,
+		&i.EndTime,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const GetVideosByUserID = `-- name: GetVideosByUserID :many
+SELECT id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+FROM videos
+WHERE user_id = ?
+`
+
+func (q *Queries) GetVideosByUserID(ctx context.Context, db DBTX, userID int64) ([]Video, error) {
+	rows, err := db.QueryContext(ctx, GetVideosByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Video
+	for rows.Next() {
+		var i Video
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.SourceVideoID,
+			&i.Type,
+			&i.FilePath,
+			&i.FileName,
+			&i.SizeInBytes,
+			&i.Duration,
+			&i.StartTime,
+			&i.EndTime,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const SaveSharedLink = `-- name: SaveSharedLink :one
+INSERT INTO shared_links (user_id, video_id, link, expires_at, created_at)
+VALUES (?, ?, ?, ?, ?) RETURNING id, video_id, user_id, link, expires_at, created_at
+`
+
+type SaveSharedLinkParams struct {
+	UserID    int64      `db:"user_id" json:"user_id"`
+	VideoID   int64      `db:"video_id" json:"video_id"`
+	Link      string     `db:"link" json:"link"`
+	ExpiresAt time.Time  `db:"expires_at" json:"expires_at"`
+	CreatedAt *time.Time `db:"created_at" json:"created_at"`
+}
+
+func (q *Queries) SaveSharedLink(ctx context.Context, db DBTX, arg SaveSharedLinkParams) (SharedLink, error) {
+	row := db.QueryRowContext(ctx, SaveSharedLink,
+		arg.UserID,
+		arg.VideoID,
+		arg.Link,
+		arg.ExpiresAt,
+		arg.CreatedAt,
+	)
+	var i SharedLink
+	err := row.Scan(
+		&i.ID,
+		&i.VideoID,
+		&i.UserID,
+		&i.Link,
+		&i.ExpiresAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const SaveVideo = `-- name: SaveVideo :one
+INSERT INTO videos (user_id, type, file_path, file_name, size_in_bytes, duration, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, created_at, updated_at
+`
+
+type SaveVideoParams struct {
+	UserID      int64      `db:"user_id" json:"user_id"`
+	Type        string     `db:"type" json:"type"`
+	FilePath    string     `db:"file_path" json:"file_path"`
+	FileName    *string    `db:"file_name" json:"file_name"`
+	SizeInBytes int64      `db:"size_in_bytes" json:"size_in_bytes"`
+	Duration    int64      `db:"duration" json:"duration"`
+	CreatedAt   *time.Time `db:"created_at" json:"created_at"`
+}
+
+func (q *Queries) SaveVideo(ctx context.Context, db DBTX, arg SaveVideoParams) (Video, error) {
+	row := db.QueryRowContext(ctx, SaveVideo,
+		arg.UserID,
+		arg.Type,
+		arg.FilePath,
+		arg.FileName,
+		arg.SizeInBytes,
+		arg.Duration,
+		arg.CreatedAt,
+	)
+	var i Video
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.SourceVideoID,
+		&i.Type,
+		&i.FilePath,
+		&i.FileName,
+		&i.SizeInBytes,
+		&i.Duration,
+		&i.StartTime,
+		&i.EndTime,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
