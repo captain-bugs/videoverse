@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS shared_links;
+
+DROP TABLE IF EXISTS videos;
+
+DROP TABLE IF EXISTS users;
