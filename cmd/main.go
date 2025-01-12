@@ -21,7 +21,6 @@ import (
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/golang-migrate/migrate/v4/source/github"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 	"videoverse/pkg/config"
-	"videoverse/pkg/logbox"
 	"videoverse/repository"
 	"videoverse/routes/v1"
 
@@ -55,8 +54,8 @@ func cors() gin.HandlerFunc {
 }
 
 func NewRouter() *Router {
-	gin.DefaultWriter = logbox.NewLogBox()
-	return &Router{gin.New()}
+	//gin.DefaultWriter = logbox.NewLogBox()
+	return &Router{gin.Default()}
 }
 
 func (r *Router) configure() {

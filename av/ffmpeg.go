@@ -264,7 +264,7 @@ func (ts *AVFile) IsValidDuration() bool {
 }
 
 func (ts *AVFile) Validate() map[string]any {
-	var errs map[string]any
+	var errs = make(map[string]any)
 	if !ts.IsValidDuration() {
 		msg := fmt.Sprintf("file duration is %vs, should be between %vs and %vs", ts.Duration, config.MIN_VIDEO_DURATION, config.MAX_VIDEO_DURATION)
 		errs["duration"] = msg

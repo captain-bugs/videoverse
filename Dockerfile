@@ -2,7 +2,6 @@ FROM golang:1.23.4-alpine3.20 AS builder
 
 RUN apk update && \
     apk add --no-cache \
-    ffmpeg \
     ca-certificates \
     build-base
 
@@ -19,11 +18,17 @@ FROM alpine:3.20
 
 WORKDIR /var/app/videoverse/
 
-RUN apk add --no-cache bash jq \
-    && apk update && apk upgrade
+RUN apk update && \
+    apk add --no-cache \
+    ca-certificates \
+    ffmpeg
 
-COPY --from=builder /var/app/videoverse/bin bin/
+COPY --from=builder /var/app/videoverse/bin .
+COPY --from=builder /var/app/videoverse/db ./db
+
+# remove the database file to start with a clean database
+RUN rm -f /var/app/videoverse/db/videoverse/videoverse.db
 
 EXPOSE 80
 
-CMD [ "./bin/videoverse" ]
+CMD [ "./videoverse" ]

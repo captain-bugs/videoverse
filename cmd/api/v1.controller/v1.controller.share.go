@@ -16,7 +16,7 @@ type IShareControllerV1 interface {
 func (c *ControllerV1) GetGenerateShareLink(ctx *gin.Context, fn GetGenerateShareLink) error {
 	userID, exist := ctx.Get("user_id")
 	if !exist {
-		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

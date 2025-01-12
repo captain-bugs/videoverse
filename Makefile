@@ -3,7 +3,7 @@ SQLITE_DB=sqlite3://$(PWD)/db/videoverse/videoverse.db
 
 
 build:
-	go mod download; CGO_ENABLED=1 go build -o bin/videoverse ./cmd/*.go
+	go mod download; go build -o bin/videoverse ./cmd/*.go
 
 migrate-up:
 	migrate -path $(MIGRATION_DIR) -database $(SQLITE_DB) -verbose up
@@ -16,5 +16,12 @@ migrate-create:
 
 sqlc:
 	rm -rf db/videoverse/*.go; sqlc generate
+
+docker-build:
+	docker build -t videoverse .
+
+docker-run:
+	$(MAKE)	docker-build
+	docker run -p 9091:80 videoverse
 
 .PHONY: build

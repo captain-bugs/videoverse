@@ -22,7 +22,7 @@ type IVideoControllerV1 interface {
 func (c *ControllerV1) GetUserVideos(ctx *gin.Context, fn GetUserVideos) error {
 	userID, exist := ctx.Get("user_id")
 	if !exist {
-		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 	reply, err := fn(ctx, userID.(int64))
 	if err != nil {
@@ -46,6 +46,10 @@ func (c *ControllerV1) GetVideo(ctx *gin.Context, fn GetVideo) error {
 }
 
 func (c *ControllerV1) PostVideo(ctx *gin.Context, fn PostVideo) error {
+	userID, exist := ctx.Get("user_id")
+	if !exist {
+		return response.BadRequest(errors.New("user_id not found in context"))
+	}
 	var req *models.ReqSaveVideo
 	if err := ctx.ShouldBind(&req); err != nil {
 		return response.BadRequest(err)
@@ -62,9 +66,10 @@ func (c *ControllerV1) PostVideo(ctx *gin.Context, fn PostVideo) error {
 	}
 	avfile := av.NewAVFile(av.WithBytes(byts))
 	avfile.FetchMetaInfo()
-	if errs := avfile.Validate(); errs != nil {
+	if errs := avfile.Validate(); len(errs) > 0 {
 		return response.ErrorsInRequestBody(errs)
 	}
+	req.UserID = userID.(int64)
 	req.AVFile = avfile
 	reply, err := fn(ctx, req)
 	if err != nil {
@@ -77,7 +82,7 @@ func (c *ControllerV1) PostVideo(ctx *gin.Context, fn PostVideo) error {
 func (c *ControllerV1) PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error {
 	userID, exist := ctx.Get("user_id")
 	if !exist {
-		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 	var request = &models.ReqTrimVideo{}
 	request.UserID = userID.(int64)
@@ -98,7 +103,7 @@ func (c *ControllerV1) PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error {
 func (c *ControllerV1) PostMergeVideo(ctx *gin.Context, fn PostMergeVideo) error {
 	userID, exist := ctx.Get("user_id")
 	if !exist {
-		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 	var request models.ReqMergeVideo
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
