@@ -101,3 +101,37 @@ func (v VideoRepository) Delete(ctx context.Context, ID int64) error {
 	//TODO implement me
 	panic("implement me")
 }
+
+func (v VideoRepository) ListByUserID(ctx context.Context, userID int64) ([]*models.Video, error) {
+	outcome, err := v.db.GetVideosByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	var videos = make([]*models.Video, 0)
+	for _, v := range outcome {
+		var video = models.Video{
+			ID:          v.ID,
+			Title:       v.Title,
+			Description: v.Description,
+			UserID:      v.UserID,
+			Type:        models.VIDEO_TYPE(v.Type),
+			FilePath:    v.FilePath,
+			FileName:    v.FileName,
+			SizeInBytes: v.SizeInBytes,
+			Duration:    v.Duration,
+
+			StartTime: 0,
+			EndTime:   0,
+			CreatedAt: time.Time{},
+			UpdatedAt: time.Time{},
+		}
+		if v.SourceVideoID.Valid {
+			video.SourceVideoID = &v.SourceVideoID.Int64
+		}
+		if v.Metadata.Valid {
+			video.Metadata = utils.MapToStruct[any, *av.AVFile](utils.StringToMap(v.Metadata.String))
+		}
+		videos = append(videos, &video)
+	}
+	return videos, nil
+}

@@ -12,10 +12,24 @@ import (
 )
 
 type IVideoControllerV1 interface {
+	GetUserVideos(ctx *gin.Context, fn GetUserVideos) error
 	GetVideo(ctx *gin.Context, fn GetVideo) error
 	PostVideo(ctx *gin.Context, fn PostVideo) error
 	PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error
 	PostMergeVideo(ctx *gin.Context, fn PostMergeVideo) error
+}
+
+func (c *ControllerV1) GetUserVideos(ctx *gin.Context, fn GetUserVideos) error {
+	userID, exist := ctx.Get("user_id")
+	if !exist {
+		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+	}
+	reply, err := fn(ctx, userID.(int64))
+	if err != nil {
+		return err
+	}
+	ctx.JSON(200, reply)
+	return nil
 }
 
 func (c *ControllerV1) GetVideo(ctx *gin.Context, fn GetVideo) error {

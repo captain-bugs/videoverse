@@ -67,4 +67,5 @@ type IVideoRepo interface {
 	Create(ctx context.Context, video *Video) (*Video, error)
 	Update(ctx context.Context, video *Video) (*Video, error)
 	Delete(ctx context.Context, ID int64) error
+	ListByUserID(ctx context.Context, userID int64) ([]*Video, error)
 }

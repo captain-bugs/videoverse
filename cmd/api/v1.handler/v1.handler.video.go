@@ -16,10 +16,21 @@ import (
 )
 
 type IVideoHandlerV1 interface {
+	GetUserVideos(ctx context.Context, userID int64) (any, error)
 	GetVideo(ctx context.Context, videoID int64) (any, error)
 	PostVideo(ctx context.Context, payload *models.ReqSaveVideo) (any, error)
 	PostTrimVideo(ctx context.Context, payload *models.ReqTrimVideo) (any, error)
 	PostMergeVideo(ctx context.Context, payload *models.ReqMergeVideo) (any, error)
+}
+
+func (h *HandlerV1) GetUserVideos(ctx context.Context, userID int64) (any, error) {
+	videos, err := h.repo.Video().ListByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	var results = make(map[string]any)
+	results["results"] = videos
+	return results, nil
 }
 
 func (h *HandlerV1) GetVideo(ctx context.Context, videoID int64) (any, error) {
