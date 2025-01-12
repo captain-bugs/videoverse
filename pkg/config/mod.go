@@ -16,4 +16,6 @@ var (
 	MIN_VIDEO_DURATION = getEnvFloat("MIN_VIDEO_DURATION", 5.0)
 	MAX_VIDEO_DURATION = getEnvFloat("MAX_VIDEO_DURATION", 125.0)
 	FILE_UPLOAD_PATH   = getEnvString("FILE_UPLOAD_PATH", "uploads/videos")
+	SHARE_SECRET       = getEnvString("JWT_SECRET", "secret2")
+	CDN_ENDPOINT       = getEnvString("CDN_ENDPOINT", "http://localhost:9091")
 )

@@ -17,6 +17,7 @@ func Register(group *gin.RouterGroup, repo repository.IRepo) {
 	ph := v1h.NewHandlerV1(repo)
 
 	group.POST("/user/", response.GinWrapper(pc.PostUser, ph.PostUser))
+	group.GET("/share/view/", response.GinWrapper(pc.GetViewFile, ph.GetViewFile))
 
 	user := group.Group("/user/").Use(middleware.Auth())
 	{
@@ -33,7 +34,7 @@ func Register(group *gin.RouterGroup, repo repository.IRepo) {
 
 	share := group.Group("/share/").Use(middleware.Auth())
 	{
-		share.POST("/", response.GinWrapper(pc.PostShare, ph.PostShare))
+		share.GET("/video/:id/", response.GinWrapper(pc.GetGenerateShareLink, ph.GetShare))
 	}
 
 }

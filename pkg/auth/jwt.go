@@ -1,6 +1,10 @@
 package auth
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -95,4 +99,77 @@ func (tkn *tokenManager) NewRefreshToken() (string, error) {
 
 func (tkn *tokenManager) VerifyToken(token *string) (*tokenDetails, error) {
 	return tkn.parse(*token, tkn.signingKey)
+}
+
+func GenerateSignedToken(userUID, videoID, filePath any, expiry time.Time) (*string, error) {
+	payload := map[string]interface{}{
+		"user_id":   userUID,
+		"video_id":  videoID,
+		"file_path": filePath,
+		"expiry":    expiry.UnixMilli(),
+	}
+	byts, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	h := hmac.New(sha256.New, []byte(config.SHARE_SECRET))
+	h.Write(byts)
+	digest := h.Sum(nil)
+
+	sig := base64.StdEncoding.EncodeToString(digest)
+
+	payload["signature"] = sig
+	encodedPayload, _ := json.Marshal(payload)
+	str := base64.StdEncoding.EncodeToString(encodedPayload)
+
+	return &str, nil
+}
+
+func VerifySignedToken(token string) (map[string]interface{}, error) {
+	// Decode the base64-encoded token
+	decodedToken, err := base64.StdEncoding.DecodeString(token)
+	if err != nil {
+		return nil, errors.New("invalid token encoding")
+	}
+
+	// Unmarshal the JSON payload
+	var payload map[string]interface{}
+	err = json.Unmarshal(decodedToken, &payload)
+	if err != nil {
+		return nil, errors.New("invalid token payload")
+	}
+
+	// Extract the signature from the payload
+	sig, ok := payload["signature"].(string)
+	if !ok {
+		return nil, errors.New("signature not found in token")
+	}
+	delete(payload, "signature")
+
+	// Recompute the signature
+	byts, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	h := hmac.New(sha256.New, []byte(config.SHARE_SECRET))
+	h.Write(byts)
+	expectedDigest := h.Sum(nil)
+	expectedSig := base64.StdEncoding.EncodeToString(expectedDigest)
+
+	// Compare  signatures
+	if sig != expectedSig {
+		return nil, errors.New("invalid token signature")
+	}
+
+	expiry, ok := payload["expiry"].(float64)
+	if !ok {
+		return nil, errors.New("expiry not found in token")
+	}
+	if time.Now().UnixMilli() > int64(expiry) {
+		return nil, errors.New("token expired")
+	}
+
+	return payload, nil
 }
