@@ -34,7 +34,7 @@ func (r *ReqSaveVideo) GetFile() ([]byte, error) {
 
 type ReqTrimVideo struct {
 	VideoID     int64   `json:"video_id"     binding:"required"`
-	StartTime   float64 `json:"start_time"   binding:"required,gt=0"`
+	StartTime   float64 `json:"start_time"   binding:"gte=0"`
 	EndTime     float64 `json:"end_time"     binding:"required,gtfield=StartTime"`
 	Title       string  `json:"title"        binding:"omitempty"`
 	Description string  `json:"description"  binding:"omitempty"`

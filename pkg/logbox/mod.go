@@ -19,6 +19,11 @@ func NewLogBox() *zerolog.Logger {
 		debug := flag.Bool("debug", false, "sets log level to debug")
 		flag.Parse()
 
+		// check if the log file exists
+		if _, err := os.Stat(config.LOGGING_FILE); os.IsNotExist(err) {
+			os.MkdirAll(filepath.Dir(config.LOGGING_FILE), os.ModePerm)
+		}
+
 		logfile, err := os.OpenFile(config.LOGGING_FILE, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			panic(err)

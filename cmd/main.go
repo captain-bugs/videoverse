@@ -4,11 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+	"videoverse/internal"
 	"videoverse/pkg/config"
 	"videoverse/pkg/logbox"
 	"videoverse/repository"
@@ -16,16 +19,36 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/source/github"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func runMigrations() {
+	db := internal.MakeSQLiteConnection()
+	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
+	if err != nil {
+		logbox.NewLogBox().Error().Err(err).Msg("failed to create migration driver")
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(config.MIGRATIONS_PATH, "videoverse", driver)
+	if err != nil {
+		logbox.NewLogBox().Error().Err(err).Msg("failed to create migration instance")
+	}
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		logbox.NewLogBox().Fatal().Err(err).Msg("failed to run migrations")
+	}
+}
+
 func main() {
+	runMigrations()
 	var logger = logbox.NewLogBox()
 	if config.ENV == config.PRODUCTION {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	logger.Debug().Str("LOG_LEVEL", gin.Mode()).Msg("log level set to DEBUG")
-	
+
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", config.APP_PORT),
 		Handler: routes.NewRouter().SetRoutes(repository.NewRepository()),
