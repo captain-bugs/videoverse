@@ -42,3 +42,10 @@ func BadRequest(err error) APIError {
 		Message:    err.Error(),
 	}
 }
+
+func InternalServerError(err error) APIError {
+	return APIError{
+		StatusCode: http.StatusInternalServerError,
+		Message:    err.Error(),
+	}
+}

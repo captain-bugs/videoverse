@@ -7,9 +7,9 @@ import (
 )
 
 type ReqSaveVideo struct {
-	Title       string                `form:"title" binding:"required"`
-	Description string                `form:"description" binding:"required"`
-	File        *multipart.FileHeader `form:"file" binding:"required"`
+	Title       string                `form:"title"        binding:"required"`
+	Description string                `form:"description"  binding:"required"`
+	File        *multipart.FileHeader `form:"file"         binding:"required"`
 	AVFile      *av.AVFile
 	UserID      int64
 }
@@ -30,4 +30,13 @@ func (r *ReqSaveVideo) IsFileDurationValid() bool {
 
 func (r *ReqSaveVideo) GetFile() ([]byte, error) {
 	return utils.ReadMultipartFileHeader(r.File)
+}
+
+type ReqTrimVideo struct {
+	VideoID     int64   `json:"video_id"     binding:"required"`
+	StartTime   float64 `json:"start_time"   binding:"required,gt=0"`
+	EndTime     float64 `json:"end_time"     binding:"required,gtfield=StartTime"`
+	Title       string  `json:"title"        binding:"omitempty"`
+	Description string  `json:"description"  binding:"omitempty"`
+	UserID      int64
 }

@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"videoverse/pkg/config"
 	"videoverse/pkg/logbox"
+	"videoverse/pkg/utils"
 )
 
 type TOption func(*Options)
@@ -169,8 +171,14 @@ func (ts *AVFile) FetchMetaInfo() {
 	} else {
 		ts.AudioPresent = true
 		ts.VideoPresent = true
-		videoTrack = data.Stream[0]
-		audioTrack = data.Stream[1]
+		video := utils.DotFind[Stream](data.Stream, func(val Stream) bool {
+			return val.CodecType == "video"
+		})
+		audio := utils.DotFind[Stream](data.Stream, func(val Stream) bool {
+			return val.CodecType == "audio"
+		})
+		videoTrack = *video
+		audioTrack = *audio
 	}
 
 	if ts.VideoPresent {
@@ -265,4 +273,70 @@ func (ts *AVFile) Validate() map[string]any {
 		errs["track"] = "video track not found"
 	}
 	return errs
+}
+
+func (ts *AVFile) Trim(start, end float64) (*AVFile, error) {
+	if ts.Duration < end {
+		logbox.NewLogBox().Error().Str("event", "TRIM_END_GREATER_THAN_DURATION").Str("file", ts.Name).Msg("")
+		return nil, fmt.Errorf("end time is greater than the duration of the video")
+	}
+
+	var cmd *exec.Cmd
+	if ts.InBytes != nil {
+		cmd = exec.Command(
+			"ffmpeg", "-hide_banner", "-v", "error",
+			"-i", "pipe:0",
+			"-ss", utils.ConvertSecondsToDuration(start),
+			"-to", utils.ConvertSecondsToDuration(end),
+			"-c", "copy",
+			"-f", "flv",
+			"pipe:1",
+		)
+		cmd.Stdin = io.NopCloser(bytes.NewReader(ts.InBytes))
+	} else {
+		cmd = exec.Command(
+			"ffmpeg", "-hide_banner", "-v", "error",
+			"-i", ts.Path,
+			"-ss", utils.ConvertSecondsToDuration(start),
+			"-to", utils.ConvertSecondsToDuration(end),
+			"-c", "copy",
+			"-f", "flv",
+			"pipe:1",
+		)
+	}
+	logbox.NewLogBox().Debug().Str("cmd", cmd.String()).Msg("")
+
+	stdout, err := execute(cmd)
+	if err != nil {
+		logbox.NewLogBox().Error().Str("event", "FAILED_TO_TRIM").Str("file", ts.Path).Str("error", err.Error()).Msg("")
+		return nil, err
+	}
+
+	var trimmed AVFile
+	trimmed.InBytes = []byte(*stdout)
+	trimmed.Name = "trimmed_" + ts.Name
+	trimmed.Path = config.FILE_UPLOAD_PATH + "/" + trimmed.Name
+	trimmed.FetchMetaInfo()
+	if err := trimmed.SaveToDisk(); err != nil {
+		return nil, err
+	}
+
+	return &trimmed, nil
+}
+
+func (ts *AVFile) SaveToDisk() error {
+	var file *os.File
+	var err error
+
+	file, err = os.Create(ts.Path)
+	if err != nil {
+		return fmt.Errorf("event=%s file=%s error=%v", "FAILED_TO_CREATE_ON_DISK", ts.Path, err.Error())
+	}
+	defer file.Close()
+	_, err = file.Write(ts.InBytes)
+	if err != nil {
+		return fmt.Errorf("event=%s file=%s error=%v", "FAILED_TO_WRITE_ON_DISK", ts.Path, err.Error())
+	}
+	file.Sync()
+	return nil
 }

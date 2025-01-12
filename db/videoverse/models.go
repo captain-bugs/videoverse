@@ -34,11 +34,11 @@ type Video struct {
 	SourceVideoID sql.NullInt64
 	Type          string
 	FilePath      string
-	FileName      sql.NullString
+	FileName      string
 	SizeInBytes   int64
-	Duration      int64
-	StartTime     sql.NullInt64
-	EndTime       sql.NullInt64
+	Duration      float64
+	StartTime     sql.NullFloat64
+	EndTime       sql.NullFloat64
 	Metadata      sql.NullString
 	CreatedAt     sql.NullTime
 	UpdatedAt     sql.NullTime

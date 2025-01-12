@@ -14,11 +14,11 @@ CREATE TABLE IF NOT EXISTS videos
     source_video_id INTEGER,                                                            -- References the original video if this is a trimmed or merged video
     type            TEXT    NOT NULL CHECK (type IN ('ORIGINAL', 'TRIMMED', 'MERGED')), -- Type of video
     file_path       TEXT    NOT NULL,                                                   -- Path to the video file
-    file_name       TEXT,                                                               -- Original file name for 'original' videos
+    file_name       TEXT    NOT NULL,                                                               -- Original file name for 'original' videos
     size_in_bytes   INTEGER NOT NULL,                                                   -- Size of the video in bytes
-    duration        INTEGER NOT NULL,                                                   -- Duration of the video in seconds
-    start_time      INTEGER,                                                            -- Start time for trimmed videos
-    end_time        INTEGER,                                                            -- End time for trimmed videos
+    duration        REAL    NOT NULL,                                                   -- Duration of the video in seconds
+    start_time      REAL,                                                               -- Start time for trimmed videos
+    end_time        REAL,                                                               -- End time for trimmed videos
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME,
     FOREIGN KEY (source_video_id) REFERENCES videos (id) ON DELETE SET NULL,

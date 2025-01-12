@@ -1,9 +1,11 @@
 package v1_controller
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"videoverse/av"
 	"videoverse/pkg/models"
 	"videoverse/response"
@@ -12,9 +14,19 @@ import (
 type IVideoControllerV1 interface {
 	GetVideo(ctx *gin.Context, fn GetVideo) error
 	PostVideo(ctx *gin.Context, fn PostVideo) error
+	PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error
 }
 
 func (c *ControllerV1) GetVideo(ctx *gin.Context, fn GetVideo) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return response.BadRequest(err)
+	}
+	reply, err := fn(ctx, int64(id))
+	if err != nil {
+		return err
+	}
+	ctx.JSON(200, reply)
 	return nil
 }
 
@@ -40,6 +52,27 @@ func (c *ControllerV1) PostVideo(ctx *gin.Context, fn PostVideo) error {
 	}
 	req.AVFile = avfile
 	reply, err := fn(ctx, req)
+	if err != nil {
+		return err
+	}
+	ctx.JSON(200, reply)
+	return nil
+}
+
+func (c *ControllerV1) PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error {
+	userID, exist := ctx.Get("user_id")
+	if !exist {
+		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+	}
+	var request = &models.ReqTrimVideo{}
+	request.UserID = userID.(int64)
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
+		return response.BadRequest(err)
+	}
+	if problems := models.Validate(request, make(map[string]any)); len(problems) > 0 {
+		return response.ErrorsInRequestBody(problems)
+	}
+	reply, err := fn(ctx, request)
 	if err != nil {
 		return err
 	}

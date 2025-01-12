@@ -229,9 +229,9 @@ type SaveVideoParams struct {
 	Description string
 	Type        string
 	FilePath    string
-	FileName    sql.NullString
+	FileName    string
 	SizeInBytes int64
-	Duration    int64
+	Duration    float64
 	Metadata    sql.NullString
 	CreatedAt   sql.NullTime
 }

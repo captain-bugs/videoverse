@@ -15,5 +15,5 @@ var (
 	DATABASE_PATH      = getEnvString("DATABASE_PATH", "db/videoverse/videoverse.db")
 	MIN_VIDEO_DURATION = getEnvFloat("MIN_VIDEO_DURATION", 5.0)
 	MAX_VIDEO_DURATION = getEnvFloat("MAX_VIDEO_DURATION", 125.0)
-	FILE_UPLOAD_PATH   = getEnvString("FILE_UPLOAD_PATH", "uploads")
+	FILE_UPLOAD_PATH   = getEnvString("FILE_UPLOAD_PATH", "uploads/videos")
 )

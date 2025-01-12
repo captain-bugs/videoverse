@@ -3,6 +3,8 @@ package utils
 import (
 	"io"
 	"mime/multipart"
+	"os"
+	"path/filepath"
 	"videoverse/response"
 )
 
@@ -29,4 +31,16 @@ func SupportedFileTypes(fileType string) bool {
 		return true
 	}
 	return false
+}
+
+func FileExists(path string) bool {
+	filePath := filepath.Join(path)
+	_, err := os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		return false
+	}
+	return true
 }
