@@ -7,6 +7,7 @@ Videoverse is a video management and processing application
 To get started you can either run it locally or use Docker for a containerized deployment.
 Follow the instructions in the "Getting Started" section to set up the application.
 
+Link to Demo [demo](https://drive.google.com/file/d/1Q10n3bp_JaUMlz6iPummt72G96OS7MWF/view?usp=sharing)
 
 ## Features
 
