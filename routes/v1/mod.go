@@ -28,6 +28,7 @@ func Register(group *gin.RouterGroup, repo repository.IRepo) {
 		video.GET("/:id/", response.GinWrapper(pc.GetVideo, ph.GetVideo))
 		video.POST("/", response.GinWrapper(pc.PostVideo, ph.PostVideo))
 		video.POST("/trim/", response.GinWrapper(pc.PostTrimVideo, ph.PostTrimVideo))
+		video.POST("/merge/", response.GinWrapper(pc.PostMergeVideo, ph.PostMergeVideo))
 	}
 
 	share := group.Group("/share/").Use(middleware.Auth())

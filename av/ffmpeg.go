@@ -358,3 +358,29 @@ func (ts *AVFile) SaveToDisk() error {
 	file.Sync()
 	return nil
 }
+
+func Merge(filename, filepath string, files []*AVFile) *AVFile {
+
+	//"concat:input1|input2"
+	var args []string
+	args = append(args, "-hide_banner", "-v", "error")
+	for _, file := range files {
+		args = append(args, "-i", file.Path)
+	}
+	args = append(args, "-filter_complex", fmt.Sprintf("concat=n=%d:v=1:a=1", len(files)), filepath)
+
+	cmd := exec.Command("ffmpeg", args...)
+	logbox.NewLogBox().Debug().Str("cmd", cmd.String()).Msg("")
+	_, err := execute(cmd)
+	if err != nil {
+		logbox.NewLogBox().Error().Str("event", "FAILED_TO_MERGE_VIDEOS").Str("error", err.Error()).Msg("")
+		return nil
+	}
+	merged := &AVFile{
+		Name: fmt.Sprintf("M_%v_%s", utils.GenerateUUID(), filename),
+		Path: filepath,
+	}
+	merged.FetchMetaInfo()
+	merged.Read()
+	return merged
+}

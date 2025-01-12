@@ -40,3 +40,10 @@ type ReqTrimVideo struct {
 	Description string  `json:"description"  binding:"omitempty"`
 	UserID      int64
 }
+
+type ReqMergeVideo struct {
+	VideoIDs    []int64 `json:"video_ids"    binding:"required,dive,min=2"`
+	Title       string  `json:"title"        binding:"required"`
+	Description string  `json:"description"  binding:"required"`
+	UserID      int64
+}

@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 	"videoverse/pkg/logbox"
 )
@@ -50,4 +51,9 @@ func MapToStruct[M any, S any](m M) S {
 		logbox.NewLogBox().Error().Err(err).Msg("error in json unmarshal")
 	}
 	return structure
+}
+
+func ToFlatCase(s string) string {
+	x := strings.ToLower(s)
+	return strings.ReplaceAll(x, " ", "_")
 }

@@ -15,6 +15,7 @@ type IVideoControllerV1 interface {
 	GetVideo(ctx *gin.Context, fn GetVideo) error
 	PostVideo(ctx *gin.Context, fn PostVideo) error
 	PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error
+	PostMergeVideo(ctx *gin.Context, fn PostMergeVideo) error
 }
 
 func (c *ControllerV1) GetVideo(ctx *gin.Context, fn GetVideo) error {
@@ -73,6 +74,27 @@ func (c *ControllerV1) PostTrimVideo(ctx *gin.Context, fn PostTrimVideo) error {
 		return response.ErrorsInRequestBody(problems)
 	}
 	reply, err := fn(ctx, request)
+	if err != nil {
+		return err
+	}
+	ctx.JSON(200, reply)
+	return nil
+}
+
+func (c *ControllerV1) PostMergeVideo(ctx *gin.Context, fn PostMergeVideo) error {
+	userID, exist := ctx.Get("user_id")
+	if !exist {
+		return ctx.AbortWithError(400, response.NewAPIError(400, errors.New("user_id not found in context")))
+	}
+	var request models.ReqMergeVideo
+	if err := json.NewDecoder(ctx.Request.Body).Decode(&request); err != nil {
+		return response.BadRequest(err)
+	}
+	if problems := models.Validate(request, make(map[string]any)); len(problems) > 0 {
+		return response.ErrorsInRequestBody(problems)
+	}
+	request.UserID = userID.(int64)
+	reply, err := fn(ctx, &request)
 	if err != nil {
 		return err
 	}
