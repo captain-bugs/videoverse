@@ -14,13 +14,13 @@ type IUserControllerV1 interface {
 }
 
 func (c *ControllerV1) GetUser(ctx *gin.Context, fn GetUser) error {
-	id, exist := ctx.Get("user_id")
-	if !exist {
+	userID := ctx.GetInt64("user_id")
+	if userID == 0 {
 		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 
 	rc := ctx.Request.Context()
-	_, err := fn(rc, id.(int64))
+	_, err := fn(rc, userID)
 	if err != nil {
 		return response.NewAPIError(500, err)
 	}

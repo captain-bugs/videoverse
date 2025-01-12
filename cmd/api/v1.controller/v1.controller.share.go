@@ -14,8 +14,8 @@ type IShareControllerV1 interface {
 }
 
 func (c *ControllerV1) GetGenerateShareLink(ctx *gin.Context, fn GetGenerateShareLink) error {
-	userID, exist := ctx.Get("user_id")
-	if !exist {
+	userID := ctx.GetInt64("user_id")
+	if userID == 0 {
 		return response.BadRequest(errors.New("user_id not found in context"))
 	}
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -24,7 +24,7 @@ func (c *ControllerV1) GetGenerateShareLink(ctx *gin.Context, fn GetGenerateShar
 	}
 	payload := &models.ReqShare{
 		VideoID: int64(id),
-		UserID:  userID.(int64),
+		UserID:  userID,
 	}
 	reply, err := fn(ctx, payload)
 	if err != nil {

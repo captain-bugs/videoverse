@@ -1,0 +1,749 @@
+{
+	"info": {
+		"_postman_id": "8cd93575-65ca-4b66-be8e-f2bda7feb41f",
+		"name": "videoverse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3504337",
+		"_collection_link": "https://playdaily.postman.co/workspace/atish-workspace~e5d3b2db-8d46-49bf-8c04-0460700b2ea7/collection/3504337-8cd93575-65ca-4b66-be8e-f2bda7feb41f?action=share&source=collection_link&creator=3504337"
+	},
+	"item": [
+		{
+			"name": "user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"{{$randomEmail}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/user/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save video",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/atishabhang/Desktop/60s.mp4"
+						},
+						{
+							"key": "title",
+							"value": "{{$randomWords}}",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "{{$randomLoremSentence}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/video/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"video",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "save video",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/atishabhang/Desktop/60s.mp4"
+								},
+								{
+									"key": "title",
+									"value": "{{$randomWords}}",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremSentence}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{endpoint}}/api/v1/video/",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"video",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE, PATCH"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Jan 2025 11:48:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "827"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"created_at\": \"2025-01-12T11:48:55.698326Z\",\n    \"description\": \"Cum et ut omnis voluptas quis eos rerum.\",\n    \"duration\": 60.093367,\n    \"end_time\": 0,\n    \"file_name\": \"60s.mp4\",\n    \"file_path\": \"uploads/videos/O_01945a58-7b0c-7a9e-b971-1ccf70037c2a_60s.mp4\",\n    \"id\": 1,\n    \"metadata\": {\n        \"audio_track\": {\n            \"bitrate\": 124994,\n            \"duration\": 60.093375,\n            \"start_pts\": 0,\n            \"start_time\": 0\n        },\n        \"bitrate\": 2773189,\n        \"duration\": 60.093367,\n        \"fps\": 59.94005994005994,\n        \"in_bytes\": null,\n        \"is_audio_present\": true,\n        \"is_video_present\": true,\n        \"name\": \"\",\n        \"out_bytes\": null,\n        \"path\": \"\",\n        \"resolution\": {\n            \"height\": 1080,\n            \"width\": 1920\n        },\n        \"start_time\": 0,\n        \"video_track\": {\n            \"bitrate\": 2773189,\n            \"duration\": 60.093367,\n            \"pix_fmt\": \"yuv420p\",\n            \"start_pts\": 0,\n            \"start_time\": 0\n        }\n    },\n    \"size_in_bytes\": 21881948,\n    \"source_video_id\": null,\n    \"start_time\": 0,\n    \"title\": \"Dakota withdrawal wireless\",\n    \"type\": \"ORIGINAL\",\n    \"updated_at\": \"0001-01-01T00:00:00Z\",\n    \"user_id\": 1\n}"
+				}
+			]
+		},
+		{
+			"name": "trim video",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"video_id\": 1,\n    \"title\": \"{{$randomWords}}\",\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"start_time\": 20,\n    \"end_time\": 30\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/video/trim/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"video",
+						"trim",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "trim video",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"video_id\": 1,\n    \"title\": \"{{$randomWords}}\",\n    \"description\": \"{{$randomLoremSentence}}\",\n    \"start_time\": 10,\n    \"end_time\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/api/v1/video/trim/",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"video",
+								"trim",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE, PATCH"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Jan 2025 11:49:13 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "942"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"created_at\": \"2025-01-12T11:49:13.362974Z\",\n    \"description\": \"Dolore velit et possimus.\",\n    \"duration\": 10,\n    \"end_time\": 20,\n    \"file_name\": \"T_01945a58-bfa7-7338-b2f3-426cc319a0fb_60s.mp4\",\n    \"file_path\": \"uploads/videos/T_01945a58-bfa7-7338-b2f3-426cc319a0fb_60s.mp4\",\n    \"id\": 2,\n    \"metadata\": {\n        \"audio_track\": {\n            \"bitrate\": 124994,\n            \"duration\": 0,\n            \"start_pts\": 4,\n            \"start_time\": 0.004\n        },\n        \"bitrate\": 2773189,\n        \"duration\": 10,\n        \"fps\": 59.94005994005994,\n        \"in_bytes\": null,\n        \"is_audio_present\": true,\n        \"is_video_present\": true,\n        \"name\": \"T_01945a58-bfa7-7338-b2f3-426cc319a0fb_60s.mp4\",\n        \"out_bytes\": null,\n        \"path\": \"uploads/videos/T_01945a58-bfa7-7338-b2f3-426cc319a0fb_60s.mp4\",\n        \"resolution\": {\n            \"height\": 1080,\n            \"width\": 1920\n        },\n        \"start_time\": 0.01,\n        \"video_track\": {\n            \"bitrate\": 2773189,\n            \"duration\": 0,\n            \"pix_fmt\": \"yuv420p\",\n            \"start_pts\": 10,\n            \"start_time\": 0.01\n        }\n    },\n    \"size_in_bytes\": 3761255,\n    \"source_video_id\": 1,\n    \"start_time\": 10,\n    \"title\": \"Checking Incredible synthesizing\",\n    \"type\": \"TRIMMED\",\n    \"updated_at\": \"0001-01-01T00:00:00Z\",\n    \"user_id\": 1\n}"
+				}
+			]
+		},
+		{
+			"name": "merge video",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"video_ids\": [\n        2,\n        3\n    ],\n    \"title\": \"{{$randomWords}}\",\n    \"description\": \"{{$randomLoremSentence}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/video/merge/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"video",
+						"merge",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "merge video",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"video_ids\": [\n        2,\n        3\n    ],\n    \"title\": \"{{$randomWords}}\",\n    \"description\": \"{{$randomLoremSentence}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/api/v1/video/merge/",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"video",
+								"merge",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE, PATCH"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Jan 2025 11:49:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1088"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"created_at\": \"2025-01-12T11:49:56.707707Z\",\n    \"description\": \"Mollitia fugiat id non.\",\n    \"duration\": 20.003317,\n    \"end_time\": 0,\n    \"file_name\": \"M_01945a59-693f-742e-aca0-a11ca8e3eb2d_M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n    \"file_path\": \"uploads/videos/M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n    \"id\": 4,\n    \"metadata\": {\n        \"audio_track\": {\n            \"bitrate\": 130269,\n            \"duration\": 20.011,\n            \"start_pts\": 0,\n            \"start_time\": 0\n        },\n        \"bitrate\": 279112,\n        \"duration\": 20.003317,\n        \"fps\": 59.94005994005994,\n        \"in_bytes\": null,\n        \"is_audio_present\": true,\n        \"is_video_present\": true,\n        \"name\": \"M_01945a59-693f-742e-aca0-a11ca8e3eb2d_M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n        \"out_bytes\": null,\n        \"path\": \"uploads/videos/M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n        \"resolution\": {\n            \"height\": 1080,\n            \"width\": 1920\n        },\n        \"start_time\": 0,\n        \"video_track\": {\n            \"bitrate\": 279112,\n            \"duration\": 20.003317,\n            \"pix_fmt\": \"yuv420p\",\n            \"start_pts\": 0,\n            \"start_time\": 0\n        }\n    },\n    \"size_in_bytes\": 1056946,\n    \"source_video_id\": null,\n    \"start_time\": 0,\n    \"title\": \"neural GB withdrawal\",\n    \"type\": \"MERGED\",\n    \"updated_at\": \"0001-01-01T00:00:00Z\",\n    \"user_id\": 1\n}"
+				}
+			]
+		},
+		{
+			"name": "get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/user/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user videos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/video/list/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"video",
+						"list",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get video",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/video/:id/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"video",
+						":id",
+						""
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get video",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/api/v1/video/:id/",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"video",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE, PATCH"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Jan 2025 11:50:07 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1081"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 4,\n    \"title\": \"neural GB withdrawal\",\n    \"description\": \"Mollitia fugiat id non.\",\n    \"user_id\": 1,\n    \"source_video_id\": null,\n    \"type\": \"MERGED\",\n    \"file_path\": \"uploads/videos/M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n    \"file_name\": \"M_01945a59-693f-742e-aca0-a11ca8e3eb2d_M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n    \"size_in_bytes\": 1056946,\n    \"duration\": 20.003317,\n    \"metadata\": {\n        \"name\": \"M_01945a59-693f-742e-aca0-a11ca8e3eb2d_M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n        \"path\": \"uploads/videos/M_01945a59-57b7-723a-89cd-6937d7bf24c4_neural_gb_withdrawal.mp4\",\n        \"fps\": 59.94005994005994,\n        \"duration\": 20.003317,\n        \"resolution\": {\n            \"height\": 1080,\n            \"width\": 1920\n        },\n        \"start_time\": 0,\n        \"in_bytes\": null,\n        \"out_bytes\": null,\n        \"is_audio_present\": true,\n        \"is_video_present\": true,\n        \"audio_track\": {\n            \"bitrate\": 130269,\n            \"duration\": 20.011,\n            \"start_time\": 0,\n            \"start_pts\": 0\n        },\n        \"video_track\": {\n            \"bitrate\": 279112,\n            \"duration\": 20.003317,\n            \"start_time\": 0,\n            \"start_pts\": 0,\n            \"pix_fmt\": \"yuv420p\"\n        },\n        \"bitrate\": 279112\n    },\n    \"start_time\": 0,\n    \"end_time\": 0,\n    \"created_at\": \"0001-01-01T00:00:00Z\",\n    \"updated_at\": \"0001-01-01T00:00:00Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "get video share link",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/share/video/:id/",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"share",
+						"video",
+						":id",
+						""
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get video share link",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/api/v1/share/video/:id/",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"share",
+								"video",
+								":id",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE, PATCH"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Jan 2025 11:50:33 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "330"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"link\": \"http://localhost:9091/api/v1/share/view/?signature=eyJleHBpcnkiOjE3MzY3NjkwMzM0MzcsImZpbGVfcGF0aCI6InVwbG9hZHMvdmlkZW9zL01fMDE5NDVhNTktNTdiNy03MjNhLTg5Y2QtNjkzN2Q3YmYyNGM0X25ldXJhbF9nYl93aXRoZHJhd2FsLm1wNCIsInNpZ25hdHVyZSI6ImZoVHNoRTlieVIzVmd6N0dKSUNmWUg0REQza0lmSDVzbnYyOHVHdnBpZE09IiwidXNlcl9pZCI6MSwidmlkZW9faWQiOjR9\"\n}"
+				}
+			]
+		},
+		{
+			"name": "view share link",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/v1/share/view/?signature=eyJleHBpcnkiOjE3MzY3NjkwMzM0MzcsImZpbGVfcGF0aCI6InVwbG9hZHMvdmlkZW9zL01fMDE5NDVhNTktNTdiNy03MjNhLTg5Y2QtNjkzN2Q3YmYyNGM0X25ldXJhbF9nYl93aXRoZHJhd2FsLm1wNCIsInNpZ25hdHVyZSI6ImZoVHNoRTlieVIzVmd6N0dKSUNmWUg0REQza0lmSDVzbnYyOHVHdnBpZE09IiwidXNlcl9pZCI6MSwidmlkZW9faWQiOjR9",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"share",
+						"view",
+						""
+					],
+					"query": [
+						{
+							"key": "signature",
+							"value": "eyJleHBpcnkiOjE3MzY3NjkwMzM0MzcsImZpbGVfcGF0aCI6InVwbG9hZHMvdmlkZW9zL01fMDE5NDVhNTktNTdiNy03MjNhLTg5Y2QtNjkzN2Q3YmYyNGM0X25ldXJhbF9nYl93aXRoZHJhd2FsLm1wNCIsInNpZ25hdHVyZSI6ImZoVHNoRTlieVIzVmd6N0dKSUNmWUg0REQza0lmSDVzbnYyOHVHdnBpZE09IiwidXNlcl9pZCI6MSwidmlkZW9faWQiOjR9"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

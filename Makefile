@@ -24,4 +24,11 @@ docker-run:
 	$(MAKE)	docker-build
 	docker run -p 9091:80 videoverse
 
+run:
+	$(MAKE) build
+	./bin/videoverse
+
+test:
+	go test -cover ./...
+
 .PHONY: build

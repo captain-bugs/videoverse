@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,24 +22,9 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func runMigrations() {
-	db := internal.MakeSQLiteConnection()
-	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
-	if err != nil {
-		logbox.NewLogBox().Error().Err(err).Msg("failed to create migration driver")
-	}
-
-	m, err := migrate.NewWithDatabaseInstance(config.MIGRATIONS_PATH, "videoverse", driver)
-	if err != nil {
-		logbox.NewLogBox().Error().Err(err).Msg("failed to create migration instance")
-	}
-	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
-		logbox.NewLogBox().Fatal().Err(err).Msg("failed to run migrations")
-	}
-}
-
 func main() {
-	runMigrations()
+	internal.RunMigrations()
+	
 	var logger = logbox.NewLogBox()
 	if config.ENV == config.PRODUCTION {
 		gin.SetMode(gin.ReleaseMode)

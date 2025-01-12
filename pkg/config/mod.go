@@ -1,5 +1,7 @@
 package config
 
+import "fmt"
+
 const (
 	PRODUCTION = "production"
 	DEV        = "dev"
@@ -17,6 +19,6 @@ var (
 	MAX_VIDEO_DURATION = getEnvFloat("MAX_VIDEO_DURATION", 125.0)
 	FILE_UPLOAD_PATH   = getEnvString("FILE_UPLOAD_PATH", "uploads/videos")
 	SHARE_SECRET       = getEnvString("JWT_SECRET", "secret2")
-	CDN_ENDPOINT       = getEnvString("CDN_ENDPOINT", "http://localhost:9091")
+	CDN_ENDPOINT       = getEnvString("CDN_ENDPOINT", fmt.Sprintf("http://localhost:%d", APP_PORT))
 	MIGRATIONS_PATH    = getEnvString("MIGRATIONS_PATH", "file://./db/migrations")
 )
