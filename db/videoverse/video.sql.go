@@ -217,23 +217,37 @@ func (q *Queries) SaveUser(ctx context.Context, arg SaveUserParams) (User, error
 }
 
 const saveVideo = `-- name: SaveVideo :one
-INSERT INTO videos (user_id, title, description, type, file_path, file_name, size_in_bytes, duration, metadata,
+INSERT INTO videos (user_id,
+                    title,
+                    description,
+                    type,
+                    file_path,
+                    file_name,
+                    size_in_bytes,
+                    duration,
+                    metadata,
+                    start_time,
+                    end_time,
+                    source_video_id,
                     created_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 RETURNING id, title, description, user_id, source_video_id, type, file_path, file_name, size_in_bytes, duration, start_time, end_time, metadata, created_at, updated_at
 `
 
 type SaveVideoParams struct {
-	UserID      int64
-	Title       string
-	Description string
-	Type        string
-	FilePath    string
-	FileName    string
-	SizeInBytes int64
-	Duration    float64
-	Metadata    sql.NullString
-	CreatedAt   sql.NullTime
+	UserID        int64
+	Title         string
+	Description   string
+	Type          string
+	FilePath      string
+	FileName      string
+	SizeInBytes   int64
+	Duration      float64
+	Metadata      sql.NullString
+	StartTime     sql.NullFloat64
+	EndTime       sql.NullFloat64
+	SourceVideoID sql.NullInt64
+	CreatedAt     sql.NullTime
 }
 
 func (q *Queries) SaveVideo(ctx context.Context, arg SaveVideoParams) (Video, error) {
@@ -247,6 +261,9 @@ func (q *Queries) SaveVideo(ctx context.Context, arg SaveVideoParams) (Video, er
 		arg.SizeInBytes,
 		arg.Duration,
 		arg.Metadata,
+		arg.StartTime,
+		arg.EndTime,
+		arg.SourceVideoID,
 		arg.CreatedAt,
 	)
 	var i Video

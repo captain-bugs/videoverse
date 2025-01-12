@@ -138,7 +138,7 @@ func (ts *AVFile) FetchMetaInfo() {
 			ts.Path,
 		)
 	}
-
+	logbox.NewLogBox().Debug().Str("cmd", cmd.String()).Msg("")
 	stdout, err := execute(cmd)
 	if err != nil {
 		logbox.NewLogBox().Error().Str("event", "FAILED_TO_FETCH_META").
@@ -314,14 +314,32 @@ func (ts *AVFile) Trim(start, end float64) (*AVFile, error) {
 
 	var trimmed AVFile
 	trimmed.InBytes = []byte(*stdout)
-	trimmed.Name = "trimmed_" + ts.Name
+	trimmed.Name = fmt.Sprintf("T_%v_%s", utils.GenerateUUID(), ts.Name)
 	trimmed.Path = config.FILE_UPLOAD_PATH + "/" + trimmed.Name
-	trimmed.FetchMetaInfo()
 	if err := trimmed.SaveToDisk(); err != nil {
 		return nil, err
 	}
+	trimmed.FetchMetaInfo()
+	_ = trimmed.FetchDuration()
 
 	return &trimmed, nil
+}
+
+func (ts *AVFile) Read() {
+	file, err := os.Open(ts.Path)
+	if err != nil {
+		return
+	}
+	defer func(file *os.File) { _ = file.Close() }(file)
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return
+	}
+
+	var size = fileInfo.Size()
+	buffer := make([]byte, size)
+	_, _ = file.Read(buffer)
+	ts.InBytes = buffer
 }
 
 func (ts *AVFile) SaveToDisk() error {

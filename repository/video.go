@@ -52,22 +52,36 @@ func (v VideoRepository) GetByID(ctx context.Context, ID int64) (*models.Video, 
 func (v VideoRepository) Create(ctx context.Context, video *models.Video) (*models.Video, error) {
 
 	var arg = videoversedb.SaveVideoParams{
+		UserID:      video.UserID,
 		Title:       video.Title,
 		Description: video.Description,
-		UserID:      video.UserID,
 		Type:        string(video.Type),
 		FilePath:    video.FilePath,
 		FileName:    video.FileName,
+		SizeInBytes: video.SizeInBytes,
+		Duration:    video.Metadata.Duration,
 		Metadata: sql.NullString{
 			String: video.MetadataString(),
 			Valid:  len(video.MetadataString()) > 0,
 		},
-		SizeInBytes: video.SizeInBytes,
-		Duration:    video.Metadata.Duration,
+		StartTime: sql.NullFloat64{
+			Float64: video.StartTime,
+			Valid:   video.StartTime > 0,
+		},
+		EndTime: sql.NullFloat64{
+			Float64: video.EndTime,
+			Valid:   video.EndTime > 0,
+		},
 		CreatedAt: sql.NullTime{
 			Time:  video.CreatedAt,
 			Valid: true,
 		},
+	}
+	if video.SourceVideoID != nil {
+		arg.SourceVideoID = sql.NullInt64{
+			Int64: *video.SourceVideoID,
+			Valid: true,
+		}
 	}
 
 	outcome, err := v.db.SaveVideo(ctx, arg)

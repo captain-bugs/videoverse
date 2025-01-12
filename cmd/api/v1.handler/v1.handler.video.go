@@ -31,8 +31,9 @@ func (h *HandlerV1) GetVideo(ctx context.Context, videoID int64) (any, error) {
 
 func (h *HandlerV1) PostVideo(ctx context.Context, payload *models.ReqSaveVideo) (any, error) {
 
-	filepath := fmt.Sprintf("%s/%s", config.FILE_UPLOAD_PATH, payload.File.Filename)
-	if _, err := h.repo.Storage().Upload(io.NopCloser(bytes.NewReader(payload.AVFile.InBytes)), payload.File.Filename, config.FILE_UPLOAD_PATH); err != nil {
+	filename := fmt.Sprintf("O_%s_%s", utils.GenerateUUID(), payload.File.Filename)
+	filepath := fmt.Sprintf("%s/%s", config.FILE_UPLOAD_PATH, filename)
+	if _, err := h.repo.Storage().Upload(io.NopCloser(bytes.NewReader(payload.AVFile.InBytes)), filename, config.FILE_UPLOAD_PATH); err != nil {
 		return nil, err
 	}
 	var video = models.Video{
@@ -94,5 +95,8 @@ func (h *HandlerV1) PostTrimVideo(ctx context.Context, payload *models.ReqTrimVi
 	if err != nil {
 		return nil, err
 	}
-	return outcome, nil
+	outcome.Metadata.InBytes = nil
+	outcome.Metadata.OutBytes = nil
+	data := utils.ToMap(outcome)
+	return data, nil
 }
